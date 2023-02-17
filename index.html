@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Article Summarizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Article Summarizer</h1>
+  </header>
+  <main>
+    <form>
+      <div class="form-group">
+        <label for="url">Article URL:</label>
+        <input type="url" id="url" name="url" required>
+      </div>
+      <div class="form-group">
+        <label for="summary-length">Summary Length:</label>
+        <input type="range" id="summary-length" name="summary-length" min="0" max="100" step="1" value="50">
+        <output for="summary-length" id="summary-length-value">50</output>
+      </div>
+      <button type="submit" id="submit-button">Summarize</button>
+    </form>
+    <div id="summary-container"></div>
+  </main>
+  <script>
+    const form = document.querySelector('form');
+    const summaryContainer = document.getElementById('summary-container');
+    const summaryLengthSlider = document.getElementById('summary-length');
+    const summaryLengthValue = document.getElementById('summary-length-value');
+    const submitButton = document.getElementById('submit-button');
+
+    summaryLengthSlider.addEventListener('input', () => {
+      summaryLengthValue.value = summaryLengthSlider.value;
+    });
+    const form = document.getElementById("article-form");
+const urlInput = document.getElementById("url-input");
+const summaryContainer = document.getElementById("summary-container");
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const url = urlInput.value;
+  const summaryLength = document.getElementById("summary-length").value;
+
+  const response = await fetch("/summarize", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ url, summaryLength }),
+  });
+
+  if (!response.ok) {
+    console.error("Error summarizing article");
+    summaryContainer.innerHTML = "Error summarizing article.";
+    return;
+  }
+
+  const data = await response.json();
+  const summary = data.summary;
+  summaryContainer.innerHTML = summary;
+
+  // Fetch summary from ChatGPT API
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      const summary = data.summary;
+      summaryContainer.innerHTML = summary;
+    })
+    .catch((error) => {
+      console.error("Error fetching data: ", error);
+      summaryContainer.innerHTML = "Error fetching summary.";
+    });
+});

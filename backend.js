@@ -6,7 +6,7 @@ const port = 3000;
 app.use(express.json());
 app.use(express.static('public'));
 
-const API_KEY = 'your_api_key_here';
+const API_KEY = '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';
 
 app.post('/summarize', async (req, res) => {
   const { url } = req.body;
